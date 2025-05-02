@@ -8,6 +8,5 @@ class ImageGeneration(Base):
     __tablename__ = "image_generation"
 
     image_id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    image_word: Mapped[str] = mapped_column(String(225), nullable=False)
     image_prompt: Mapped[str] = mapped_column(String(225), nullable=False)
     image_url: Mapped[str] = mapped_column(String(1024), nullable=False)

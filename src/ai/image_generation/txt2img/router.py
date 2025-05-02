@@ -41,7 +41,7 @@ def router_test(db: Session = Depends(get_db)):
     file_name = "dalle_naughty_250424_155841.png"
     dalle_image_url = os.path.join(file_path, file_name)
 
-    sd_result = service_sd("word", "prompt", dalle_image_url, db) # 이미지 결과 (1차 경로 전달 -> 결과 생성)
+    sd_result = service_sd("prompt", dalle_image_url, db) # 이미지 결과 (1차 경로 전달 -> 결과 생성)
     return {
         "sd": sd_result
     }

@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import requests
 from sqlalchemy.orm import Session
-from ai.image_generation.img2img.config import SD_API, SD_STYLE_PROMPT, SD_CONTROLNET, SD_PAYLOAD_BASE, SD_IMAGE_DIRECTORY
+from ai.image_generation.img2img.config_sd import SD_API, SD_STYLE_PROMPT, SD_CONTROLNET, SD_PAYLOAD_BASE, SD_IMAGE_DIRECTORY
 from ai.image_generation.img2img.repository import repository_image_generation
     
 # [0] 서비스 실행
