@@ -2,7 +2,7 @@
 import os
 
 # [1] API 키
-DALLE_API = "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"
+DALLE_API = ""
 
 # [2] 이미지 저장 경로
 DALLE_IMAGE_DIRECTORY = os.path.join("ai", "image_generation", "saved_images", "dalle")
