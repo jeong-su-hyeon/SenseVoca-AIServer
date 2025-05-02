@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from api.gptapi import router  # 라우터 임포트
+# from api.gptapi import router  # 라우터 임포트
 from ai.image_generation.txt2img.router import router as image_generation # Image Generation 라우터 
 from config import Base, engine
 
 app = FastAPI()
  
-app.include_router(router)
+#app.include_router(router)
 
 @app.get("/")
 def read_root():
