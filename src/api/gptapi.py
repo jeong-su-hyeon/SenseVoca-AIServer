@@ -2,12 +2,6 @@ import time
 import datetime
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from ai.suggestrecommand import call_openai_api1
-from ai.scrapsummary import call_openai_api2
-from ai.aisummary import call_openai_api3
-from ai.documentation import call_openai_api4
-from ai.blog import call_openai_api5
-from ai.outlinenote import call_openai_api6
 from starlette.concurrency import run_in_threadpool
 import json
 
