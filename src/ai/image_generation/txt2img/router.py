@@ -33,6 +33,7 @@ def router_image_generation(request: ImageGenerationRequest, db: Session = Depen
         "sd": sd_result
     }
 
+# 테스트용
 @router.post("/image-generation/sd-test")
 def router_test(db: Session = Depends(get_db)):
     print("[DEBUG] router_test 실행")

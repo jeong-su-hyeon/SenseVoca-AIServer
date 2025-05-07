@@ -2,10 +2,12 @@
 from sqlalchemy.orm import Session
 from ai.image_generation.img2img.model import ImageGeneration
 
-def repository_image_generation(image_word: str, image_prompt: str, final_path: str, db: Session) -> ImageGeneration:
+def repository_image_generation(image_word: str, image_prompt: str, cloud_image_id: str, db: Session) -> ImageGeneration:
     print("[DEBUG] repository_image_generation 실행")
 
-    image = ImageGeneration(image_word=image_word, image_prompt=image_prompt, image_url=final_path)
+    image = ImageGeneration(image_word=image_word, 
+                            image_prompt=image_prompt, 
+                            image_url=cloud_image_id)
     db.add(image)
     db.commit()
     db.refresh(image)

@@ -1,5 +1,8 @@
 # [ img2img/config_sd.py ]
 import os 
+from huggingface_hub import hf_hub_download
+
+model_path = hf_hub_download(repo_id="stable-diffusion-v1-5", filename="sd-v1-5.ckpt", use_auth_token="git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git")
 
 # [1] API 키
 SD_API = "" # 코랩 실행했을 때 받는 WebUI 접속 링크
