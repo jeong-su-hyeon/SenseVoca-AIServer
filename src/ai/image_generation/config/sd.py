@@ -1,11 +1,12 @@
 # [ image_generation/config/sd.py ]
 import os 
+from api.image_generation import HIDE_SD_API
 # from huggingface_hub import hf_hub_download
 
 #model_path = hf_hub_download(repo_id="stable-diffusion-v1-5", filename="sd-v1-5.ckpt", use_auth_token="git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git")
 
 # [1] API 키
-SD_API = "" # 코랩 실행했을 때 받는 WebUI 접속 링크
+SD_API = HIDE_SD_API # 코랩 실행했을 때 받는 WebUI 접속 링크
 
 # [2] 이미지 저장 경로 
 SD_IMAGE_DIRECTORY = os.path.join("ai", "image_generation", "saved_images", "sd")
