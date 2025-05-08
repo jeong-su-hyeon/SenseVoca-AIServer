@@ -4,3 +4,10 @@ __pycache__/
 
 # 가상환경 무시
 venv/
+
+# API 키 무시
+src/api/
+
+# 구글 드라이브 JSON 파일 무시
+src/ai/image_generation/config/sensevoca-d80e99dbaf02.json
+

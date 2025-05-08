@@ -1,8 +1,9 @@
-# [ txt2img/config.py ]
+# [ image_generation/config/dalle.py ]
 import os
+from api.image_generation import HIDE_DALLE_API
 
 # [1] API 키
-DALLE_API = ""
+DALLE_API = HIDE_DALLE_API
 
 # [2] 이미지 저장 경로
 DALLE_IMAGE_DIRECTORY = os.path.join("ai", "image_generation", "saved_images", "dalle")
