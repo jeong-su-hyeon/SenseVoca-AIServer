@@ -1,37 +1,36 @@
 # [ image_generation/service/dalle.py ]
+from openai import OpenAI
 import os
 import requests
-from fastapi import HTTPException
-import httpx
-from openai import OpenAI
 from datetime import datetime 
 from datetime import datetime
+from fastapi import HTTPException
+from ai.image_generation.dto import ImageGenerationRequest
 from ai.image_generation.config.dalle import DALLE_API, DALLE_MODEL, DALLE_STYLE_PROMPT, DALLE_NEGATIVE_PROMPT, DALLE_IMAGE_SIZE, DALLE_IMAGE_DIRECTORY
 
 # DALLE API key
-no_proxy_client = httpx.Client(proxies=None)
-client = OpenAI(api_key=DALLE_API, http_client=no_proxy_client)
+client = OpenAI(api_key = DALLE_API)
 
 # [0] 서비스 실행
-def service_dalle(word: str, association_eng: str):
+def service_test_dalle(request: ImageGenerationRequest):
     try:
         print("[DEBUG] service_dalle 시작")
-        print(f" - 프롬프트: {association_eng}")
+        print(f" - 프롬프트: {request.association}")
         
-        word = word
-        association_eng = association_eng
-        full_prompt = association_eng + DALLE_STYLE_PROMPT + DALLE_NEGATIVE_PROMPT
+        word = request.word
+        association = request.association
+        full_prompt = association + DALLE_STYLE_PROMPT + DALLE_NEGATIVE_PROMPT
 
-        # [1] 이미지 생성 (URL 형태로 반환)
-        dalle_image_url = generate_image(full_prompt)
+        # [1] 이미지 생성
+        dalle_image_result = generate_image(full_prompt)
 
-        # [-] 이미지를 로컬에 저장 저장 (나중에 삭제 🔴)
-        dalle_local_path = save_image(word, dalle_image_url)
+        # [-] 이미지를 로컬에 저장 저장
+        dalle_local_path = save_image(word, dalle_image_result)
 
         return {
-        "message": "DALLE 이미지 생성 및 저장 성공",
+        "message": "DALLE 이미지 생성 성공",
         "word": word,
-        "association": association_eng,
+        "association": association,
         "dalle_local_path": dalle_local_path
         }
     
@@ -40,10 +39,10 @@ def service_dalle(word: str, association_eng: str):
         raise HTTPException(
             status_code=500,
             detail = {
-                "message": "DALLE 이미지 생성 및 저장 실패",
+                "message": "DALLE 이미지 생성 실패",
                 "error": str(e),
-                "word": word,
-                "association": association_eng
+                "word": request.word,
+                "association": request.association
             }
         )
 
@@ -64,13 +63,13 @@ def generate_image(full_prompt: str) -> str:
     dalle_temp_url = response.data[0].url # DALLE가 생성한 첫번째 이미지 선택
     return dalle_temp_url
 
-# [-] 이미지를 로컬에 저장 (나중에 삭제 🔴)
-def save_image(word: str, dalle_image_url: str) -> str:
-    image_data = requests.get(dalle_image_url).content
+# [-] 이미지를 로컬에 저장
+def save_image(image_word: str, dalle_image_result: str) -> str:
+    image_data = requests.get(dalle_image_result).content
 
     # 1. 저장 경로 지정
     timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    dalle_local_path = os.path.join(DALLE_IMAGE_DIRECTORY, f"dalle_{word}_{timestamp}.png")
+    dalle_local_path = os.path.join(DALLE_IMAGE_DIRECTORY, f"dalle_{image_word}_{timestamp}.png")
     os.makedirs(os.path.dirname(dalle_local_path), exist_ok = True) # 저장 디렉토리 생성
 
     # 2. 이미지 저장
