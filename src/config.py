@@ -1,4 +1,4 @@
-openAI_key = ""
+
 
 ############ [수현] image_generation 테스트 config
 # [config.py]
