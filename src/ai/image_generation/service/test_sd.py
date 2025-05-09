@@ -1,23 +1,23 @@
 # [ image_generation/service/sd.py ]
-import os
-import io
-import requests
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-from datetime import datetime
 import base64
+from datetime import datetime
+import os
+import requests
 from googleapiclient.http import MediaIoBaseUpload
+import io
+from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from ai.image_generation.config.sd import SD_API, SD_STYLE_PROMPT, SD_CONTROLNET, SD_PAYLOAD_BASE, SD_IMAGE_DIRECTORY
 from ai.image_generation.repository import repository_image_generation
 from ai.image_generation.config.cloud import drive_service
 
 # [0] 서비스 실행
-def service_sd(basic_word_id: int, word: str, association_eng: str, dalle_local_path: str, db: Session):
+def service_test_sd(basic_word_id: int, word: str, association: str, dalle_local_path: str, db: Session):
     try:
         print("[DEBUG] service_sd 실행")
 
         # [1] 이미지 설정
-        payload = setup_image(association_eng, dalle_local_path) # dict
+        payload = setup_image(association, dalle_local_path) # dict
 
         # [2] SD WebUI API 요청 <-> 응답(이미지 생성 결과)
         sd_image_result = request_api(f"{SD_API}/sdapi/v1/img2img", payload) # bytes
@@ -36,7 +36,7 @@ def service_sd(basic_word_id: int, word: str, association_eng: str, dalle_local_
             "message": "SD 이미지 생성 및 업로드 성공",
             "id": saved_image.basic_word_id,
             "word": word,
-            "association": association_eng,
+            "association": association,
             "image_url": saved_image.image_url,
         }
 
@@ -48,7 +48,7 @@ def service_sd(basic_word_id: int, word: str, association_eng: str, dalle_local_
                 "message": "SD 이미지 생성 및 업로드 실패",
                 "error": str(e),
                 "word": word,
-                "association": association_eng
+                "association": association
             }
         )
 
@@ -116,7 +116,7 @@ def upload_to_drive(image_data: bytes, word: str, folder_id: str = "13giaHuBBXbt
         ).execute()
 
         file_id = file.get('id')
-        print(f" - 구글 드라이브에 파일 업로드 성공: 파일 ID = {file_id}")
+        print(f" - 구글 드라이브에 파일 업로드 성공 : 파일 ID = {file_id}")
 
         # 공개 권한 부여
         drive_service.permissions().create(
