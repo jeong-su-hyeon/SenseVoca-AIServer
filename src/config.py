@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 DATABASE_URL = "mysql+pymysql://root:1234@localhost:3306/sensevocadb"
 
 # SQLAlchemy 연결
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=False)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 Base = declarative_base()
