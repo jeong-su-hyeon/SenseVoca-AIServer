@@ -1,13 +1,13 @@
 import json
 from fastapi import HTTPException
-from app.schemas.llm_dto import (
+from src.app.schemas.llm_dto import (
     GetWordPhoneticsRequest,
     GetWordPhoneticsResponse,
     CreateMnemonicExampleRequest,
     CreateMnemonicExampleResponse
 )
-from app.services.llm_openai import request_openai_phonetics, request_openai_mnemonic
-from app.services.image_service import generate_image_from_prompt
+from src.app.services.llm_openai import request_openai_phonetics, request_openai_mnemonic
+from src.app.services.image_service import generate_image_from_prompt
 
 
 # 발음 조회 - OpenAI 기반

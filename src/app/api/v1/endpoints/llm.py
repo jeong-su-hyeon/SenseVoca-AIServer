@@ -1,11 +1,11 @@
 from fastapi import APIRouter, status, HTTPException
-from app.schemas.llm_dto import (
+from src.app.schemas.llm_dto import (
     GetWordPhoneticsRequest,
     GetWordPhoneticsResponse,
     CreateMnemonicExampleRequest,
     CreateMnemonicExampleResponse
 )
-from app.services.llm_service import (
+from src.app.services.llm_service import (
     get_word_phonetics,
     generate_mnemonic_example,
     get_word_phonetics_workaround,

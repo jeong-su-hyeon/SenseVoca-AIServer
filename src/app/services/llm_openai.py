@@ -1,7 +1,7 @@
 from openai import AsyncOpenAI
-from app.core.config import settings
-from app.prompts.phonetic_prompt import phonetic_prompt
-from app.prompts.mnemonic_prompt import mnemonic_prompt
+from src.app.core.config import settings
+from src.app.prompts.phonetic_prompt import phonetic_prompt
+from src.app.prompts.mnemonic_prompt import mnemonic_prompt
 
 client = AsyncOpenAI(api_key=settings.openai_api_key)
 
