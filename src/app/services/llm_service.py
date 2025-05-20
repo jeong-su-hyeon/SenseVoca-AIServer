@@ -47,7 +47,7 @@ async def generate_mnemonic_example(request: CreateMnemonicExampleRequest) -> Cr
         raise HTTPException(status_code=500, detail="OpenAI 응답에 imagePrompt가 없습니다.")
 
     try:
-        image_url = await generate_image_from_prompt(image_prompt)
+        image_url = generate_image_from_prompt(request.word, image_prompt)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"이미지 생성 실패: {str(e)}")
 
