@@ -12,7 +12,7 @@ from src.app.services.llm_service import (
     generate_mnemonic_workaround
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/ai")
 
 @router.post(
     "/word-phonetics",
@@ -24,7 +24,7 @@ router = APIRouter()
 )
 async def fetch_word_phonetics(request: GetWordPhoneticsRequest):
     try:
-        return await get_word_phonetics(request)
+        return await get_word_phonetics_workaround(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -39,6 +39,6 @@ async def fetch_word_phonetics(request: GetWordPhoneticsRequest):
 )
 async def fetch_mnemonic_example(request: CreateMnemonicExampleRequest):
     try:
-        return await generate_mnemonic_example(request)
+        return await generate_mnemonic_workaround(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
