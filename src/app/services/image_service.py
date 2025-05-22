@@ -14,7 +14,8 @@ def generate_image_from_prompt(word: str, image_prompt: str):
                         cute cartoon style, soft lighting, clear lines, friendly expression, clear color"""
     NEGATIVE_PROMPT = """, no grayscale, no monochrome, no detailed muscles, no abs, no violent themes, 
                         no weapons, no realistic anatomy, no intense shadows, no text, no watermarks, no nudity, no creepy or unsettling faces, 
-                        avoid excessive details, no photo style, no shirtless, no nudity, not creepy face, no grey scale"""
+                        avoid excessive details, no photo style, no shirtless, no nudity, not creepy face, no grey scale, 
+                        Don't create color charts, other charts that aren't related to sentences """
     full_prompt = image_prompt + STYLE_PROMPT + NEGATIVE_PROMPT
 
     # [1] 이미지 생성 (임시 URL로 반환)
