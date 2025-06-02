@@ -2,11 +2,6 @@
 from pydantic import BaseModel
 from typing import List,Optional
 
-# 요청 DTO: 단어 + 발음 기호(국가)
-class PronunciationRequest(BaseModel):
-    word: str
-    country: str
-
 # 발음 평가 결과 - 전체 점수
 class OverallScore(BaseModel):
     accuracy: float
@@ -24,5 +19,5 @@ class PhonemeResult(BaseModel):
 class PronunciationResponse(BaseModel):
     word: str
     overallScore: OverallScore
-    phonemes: List[PhonemeResult]
+    phonemeResults: List[PhonemeResult]
 

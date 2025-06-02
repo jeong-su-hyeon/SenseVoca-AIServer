@@ -103,5 +103,5 @@ async def extract_pronunciation_data(pronunciation_data: dict) -> PronunciationR
             fluency = nbest["PronunciationAssessment"]["FluencyScore"],
             completeness = nbest["PronunciationAssessment"]["CompletenessScore"],
             total = nbest["PronunciationAssessment"]["PronScore"]),
-        phonemes = phoneme_results
+        phonemeResults = phoneme_results
         )
