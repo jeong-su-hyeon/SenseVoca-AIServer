@@ -20,5 +20,10 @@ async def fetch_word_pronunciation(
     audio: UploadFile = File(...)):
     try: 
         return await stt_service(word, country, audio)             
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=f"[라우터] 잘못된 요청 값: {ve}")
+    except IOError as ioe:
+        raise HTTPException(status_code=500, detail=f"[라우터] 파일 처리 오류: {ioe}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail="[라우터] 발음 평가 실패 : " + str(e))
+        traceback.print_exc()  # 서버 콘솔 로그에 전체 스택 추적 출력
+        raise HTTPException(status_code=500, detail=f"[라우터] 발음 평가 실패: {str(e)}")
