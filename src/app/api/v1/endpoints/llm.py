@@ -24,7 +24,7 @@ router = APIRouter(prefix="/ai")
 )
 async def fetch_word_phonetics(request: GetWordPhoneticsRequest):
     try:
-        return await get_word_phonetics_workaround(request)
+        return await get_word_phonetics(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -39,6 +39,6 @@ async def fetch_word_phonetics(request: GetWordPhoneticsRequest):
 )
 async def fetch_mnemonic_example(request: CreateMnemonicExampleRequest):
     try:
-        return await generate_mnemonic_workaround(request)
+        return await generate_mnemonic_example(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
