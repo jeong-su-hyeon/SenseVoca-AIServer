@@ -23,12 +23,12 @@ async def request_openai_phonetics(word: str, meaning: str) -> str:
 async def request_openai_mnemonic(word: str, meaning: str, interest: str) -> str:
     try:
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="o4-mini",
             messages=[
                 {"role": "system", "content": mnemonic_prompt()},
                 {"role": "user", "content": f"단어: {word}\n뜻: {meaning}\n관심사: {interest}"}
             ],
-            temperature=0.3,
+            reasoning_effort="medium"
         )
         return response.choices[0].message.content
     except Exception as e:
