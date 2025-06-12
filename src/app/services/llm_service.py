@@ -30,25 +30,43 @@ async def get_word_phonetics(request: GetWordPhoneticsRequest) -> GetWordPhoneti
 # 니모닉 생성 - OpenAI + 이미지 생성 포함
 async def generate_mnemonic_example(request: CreateMnemonicExampleRequest) -> CreateMnemonicExampleResponse:
     try:
+        print("🟦 [AI 예문 생성 시작]")
+        print(f"요청 데이터: {request.dict()}")
         ai_response = await request_openai_mnemonic(
             word=request.word,
             meaning=request.meaning,
             interest=request.interest
         )
+
+        print("🟩 [AI 응답 수신]")
+        print(ai_response)
+
         data = json.loads(ai_response)
+
     except json.JSONDecodeError:
+        print("🟥 [JSON 파싱 실패]")
+        print(ai_response)
         raise HTTPException(status_code=500, detail=f"OpenAI 응답 파싱 실패: {ai_response}")
+
     except Exception as e:
+        print("🟥 [AI 호출 예외]")
+        print(str(e))
         raise HTTPException(status_code=500, detail=f"OpenAI API 호출 오류: {str(e)}")
 
-    # 이미지 프롬프트 처리
+    # 이미지 생성용 프롬프트 추출
     image_prompt = data.pop("imagePrompt", None)
     if not image_prompt:
+        print("🟥 [imagePrompt 없음]")
         raise HTTPException(status_code=500, detail="OpenAI 응답에 imagePrompt가 없습니다.")
 
     try:
+        print("🟦 [이미지 생성 요청]")
         image_url = generate_image_from_prompt(request.word, image_prompt)
+        print("🟩 [이미지 생성 성공]")
+        print(f"Image URL: {image_url}")
     except Exception as e:
+        print("🟥 [이미지 생성 실패]")
+        print(str(e))
         raise HTTPException(status_code=500, detail=f"이미지 생성 실패: {str(e)}")
 
     return CreateMnemonicExampleResponse(
