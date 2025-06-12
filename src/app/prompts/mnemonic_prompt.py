@@ -63,4 +63,9 @@ def mnemonic_prompt():
         }
 
         #### Now generate a result using the given word, meaning, and interest.
+
+        IMPORTANT OUTPUT FORMAT RULES:
+        - Return the output as raw JSON only.
+        - Do NOT use triple backticks (```) or any markdown formatting.
+        - The output must start with `{` and end with `}`.
     """
