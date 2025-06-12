@@ -22,6 +22,9 @@ async def request_openai_phonetics(word: str, meaning: str) -> str:
 
 async def request_openai_mnemonic(word: str, meaning: str, interest: str) -> str:
     try:
+        print("🟦 [OpenAI 요청 시작]")
+        print(f"   - 단어: {word}, 뜻: {meaning}, 관심사: {interest}")
+        
         response = await client.chat.completions.create(
             model="o4-mini",
             messages=[
@@ -30,6 +33,12 @@ async def request_openai_mnemonic(word: str, meaning: str, interest: str) -> str
             ],
             reasoning_effort="medium"
         )
-        return response.choices[0].message.content
+        result = response.choices[0].message.content
+        print("🟩 [OpenAI 응답 완료]")
+        print(result)
+        return result
+    
     except Exception as e:
+        print("🟥 [OpenAI 호출 중 예외 발생]")
+        print(f"예외: {str(e)}")
         raise ValueError(f"OpenAI API 호출 오류 (니모닉): {str(e)}")
