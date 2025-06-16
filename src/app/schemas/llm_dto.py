@@ -29,3 +29,12 @@ class CreateMnemonicExampleResponse(BaseModel):
     imageUrl: str       # AI 이미지 URL
     exampleEng: str     # 영어 예문
     exampleKor: str     # 한글 해석 예문
+
+class RegenerateMnemonicExampleRequest(BaseModel):
+    word: str
+    meaning: str
+    association: str
+
+class RegenerateMnemonicExampleResponse(BaseModel):
+    association: str
+    imageUrl: str
