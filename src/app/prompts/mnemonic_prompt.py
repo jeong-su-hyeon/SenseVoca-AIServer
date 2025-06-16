@@ -19,8 +19,8 @@ def mnemonic_prompt():
         👉 Do **not** use the user's interest field in the association sentence.
 
         2. Format the association as:  
-        `[연상 문장] ; [Surround Korean meaning with brackets [], and write Korean pronunciation-based word with English pronunciation in parentheses ()]`  
-        Example: `"코를 맞대고 입을 결합해선! ; 코(co)를 맞대고 입을 [결합]해선(hesion)!"`
+        `[Surround Korean meaning with brackets [], and wrap the Korean pronunciation-based word with full-width angle brackets ＜ ＞, followed by the English pronunciation in parentheses ()]`  
+        Example: `"<코>(co)를 맞대고 입을 [결합]<해선>(hesion)!"`
 
         ✅ **Important Constraints:**
 
@@ -29,11 +29,17 @@ def mnemonic_prompt():
             - ✅ Acceptable examples: 아쉬(ash), 애취(ash), 해선(hesion)
 
         - Interjections like 감탄사 are allowed **only if natural**. Do **not** force unnatural or awkward syllables.
-            - Example: `"재가 날려서 애취! ; 재가 날려서 애취(ash)! [재]가 날렸다!"`
+            - Example: `"[재]가 날려서 <애취>(ash)!"`
 
         - Keep mnemonic sentences **short, intuitive, and easily memorable**.
         - Avoid overly long or decorative phrasing.
         - The **key goal** is to naturally embed the pronunciation cue and meaning into a Korean sentence that’s easy to remember.
+
+        - The Korean pronunciation-based word should preferably be a familiar and intuitive word for Korean learners.
+        - Try to use words that are common in daily life or easily imaginable.
+        - Avoid obscure or technical terms (e.g., opera terms, scientific jargon) unless no better alternative is available.
+        - Prefer words like: 텐트, 감자, 바나나, 학교, 토끼, 병원
+        - Avoid words like: 테너, 슈뢰딩거, 펜타곤 unless they are widely recognized by most Korean learners.
 
         3. A natural **English sentence using the word**, ideally reflecting the user's interest (e.g., science, food, gaming).
 
@@ -49,14 +55,14 @@ def mnemonic_prompt():
         Example:
         {
         "meaning": "[명사] 결합, 응집력",
-        "association": "코를 맞대고 입을 결합해선! ; 코(co)를 맞대고 입을 [결합]해선(hesion)!",
+        "association": "<코>(co)를 맞대고 입을 [결합]<해선>(hesion)!",
         "exampleEng": "In chemistry class, we learned how cohesion helps water molecules stick together.",
         "exampleKor": "화학 수업에서 우리는 응집력이 물 분자를 함께 있게 해준다는 걸 배웠다.",
         "imagePrompt": "Two people putting their noses and lips together like glue, symbolizing strong cohesion"
         },
         {
         "meaning": "[명사] 냉기, 한기; [동사] 식히다, 차가워지다",
-        "association": "칠도의 기온으로 떨어져 한기의 날씨! ; 칠(chill)도의 기온으로 떨어져 [한기]의 날씨!",
+        "association": "<칠>(chill)도의 기온으로 떨어져 [한기]의 날씨!",
         "exampleEng": "During our camping trip, the sudden chill at night made us huddle around the fire.",
         "exampleKor": "캠핑 중 갑작스러운 한기에 우리는 모닥불 주위에 옹기종기 모였다.",
         "imagePrompt": "A thermometer showing 7 degrees Celsius, with people shivering in cold weather"
