@@ -1,12 +1,15 @@
 import json
+import asyncio
 from fastapi import HTTPException
 from src.app.schemas.llm_dto import (
     GetWordPhoneticsRequest,
     GetWordPhoneticsResponse,
     CreateMnemonicExampleRequest,
-    CreateMnemonicExampleResponse
+    CreateMnemonicExampleResponse,
+    RegenerateMnemonicExampleRequest,
+    RegenerateMnemonicExampleResponse
 )
-from src.app.services.llm_openai import request_openai_phonetics, request_openai_mnemonic
+from src.app.services.llm_openai import request_openai_phonetics, request_openai_mnemonic, request_openai_regenerate_mnemonic
 from src.app.services.image_service import generate_image_from_prompt
 
 
@@ -29,45 +32,45 @@ async def get_word_phonetics(request: GetWordPhoneticsRequest) -> GetWordPhoneti
 
 # 니모닉 생성 - OpenAI + 이미지 생성 포함
 async def generate_mnemonic_example(request: CreateMnemonicExampleRequest) -> CreateMnemonicExampleResponse:
+    ai_response = None
+    for attempt in range(2):
+        try:
+            print(f"🟦 [AI 예문 생성 요청 - 시도 {attempt+1}]")
+            ai_response = await request_openai_mnemonic(
+                word=request.word,
+                meaning=request.meaning,
+                interest=request.interest
+            )
+            print("🟩 [AI 응답 수신]")
+            print(ai_response)
+            break  # 성공했으면 반복 종료
+        except Exception as e:
+            print(f"🟥 [AI 호출 예외 - 시도 {attempt+1}] {str(e)}")
+            if attempt == 1:
+                raise HTTPException(status_code=500, detail="OpenAI API 호출 오류 (2회 실패)")
+
     try:
-        print("🟦 [AI 예문 생성 시작]")
-        print(f"요청 데이터: {request.dict()}")
-        ai_response = await request_openai_mnemonic(
-            word=request.word,
-            meaning=request.meaning,
-            interest=request.interest
-        )
-
-        print("🟩 [AI 응답 수신]")
-        print(ai_response)
-
         data = json.loads(ai_response)
-
     except json.JSONDecodeError:
-        print("🟥 [JSON 파싱 실패]")
-        print(ai_response)
         raise HTTPException(status_code=500, detail=f"OpenAI 응답 파싱 실패: {ai_response}")
 
-    except Exception as e:
-        print("🟥 [AI 호출 예외]")
-        print(str(e))
-        raise HTTPException(status_code=500, detail=f"OpenAI API 호출 오류: {str(e)}")
-
-    # 이미지 생성용 프롬프트 추출
     image_prompt = data.pop("imagePrompt", None)
     if not image_prompt:
-        print("🟥 [imagePrompt 없음]")
         raise HTTPException(status_code=500, detail="OpenAI 응답에 imagePrompt가 없습니다.")
 
-    try:
-        print("🟦 [이미지 생성 요청]")
-        image_url = generate_image_from_prompt(request.word, image_prompt)
-        print("🟩 [이미지 생성 성공]")
-        print(f"Image URL: {image_url}")
-    except Exception as e:
-        print("🟥 [이미지 생성 실패]")
-        print(str(e))
-        raise HTTPException(status_code=500, detail=f"이미지 생성 실패: {str(e)}")
+    image_url = None
+    for attempt in range(2):
+        try:
+            print(f"🟦 [이미지 생성 요청 - 시도 {attempt+1}]")
+            image_url = generate_image_from_prompt(request.word, image_prompt)
+            print("🟩 [이미지 생성 성공]")
+            print(f"Image URL: {image_url}")
+            break
+        except Exception as e:
+            print(f"🟥 [이미지 생성 실패 - 시도 {attempt+1}] {str(e)}")
+            if attempt == 1:
+                raise HTTPException(status_code=500, detail="이미지 생성 실패 (2회 실패)")
+            await asyncio.sleep(1)  # 약간 대기
 
     return CreateMnemonicExampleResponse(
         meaning=data.get("meaning", ""),
@@ -76,6 +79,53 @@ async def generate_mnemonic_example(request: CreateMnemonicExampleRequest) -> Cr
         exampleKor=data.get("exampleKor", ""),
         imageUrl=image_url
     )
+
+async def regenerate_mnemonic_example(request: RegenerateMnemonicExampleRequest) -> RegenerateMnemonicExampleResponse:
+    ai_response = None
+    for attempt in range(2):
+        try:
+            print(f"🟦 [AI 예문 생성 요청 - 시도 {attempt+1}]")
+            ai_response = await request_openai_regenerate_mnemonic(
+                word=request.word,
+                meaning=request.meaning,
+                association=request.association
+            )
+            print("🟩 [AI 응답 수신]")
+            print(ai_response)
+            break  # 성공했으면 반복 종료
+        except Exception as e:
+            print(f"🟥 [AI 호출 예외 - 시도 {attempt+1}] {str(e)}")
+            if attempt == 1:
+                raise HTTPException(status_code=500, detail="OpenAI API 호출 오류 (2회 실패)")
+
+    try:
+        data = json.loads(ai_response)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail=f"OpenAI 응답 파싱 실패: {ai_response}")
+
+    image_prompt = data.pop("imagePrompt", None)
+    if not image_prompt:
+        raise HTTPException(status_code=500, detail="OpenAI 응답에 imagePrompt가 없습니다.")
+
+    image_url = None
+    for attempt in range(2):
+        try:
+            print(f"🟦 [이미지 생성 요청 - 시도 {attempt+1}]")
+            image_url = generate_image_from_prompt(request.word, image_prompt)
+            print("🟩 [이미지 생성 성공]")
+            print(f"Image URL: {image_url}")
+            break
+        except Exception as e:
+            print(f"🟥 [이미지 생성 실패 - 시도 {attempt+1}] {str(e)}")
+            if attempt == 1:
+                raise HTTPException(status_code=500, detail="이미지 생성 실패 (2회 실패)")
+            await asyncio.sleep(1)  # 약간 대기
+
+    return RegenerateMnemonicExampleResponse(
+        association=data.get("association", ""),
+        imageUrl=image_url
+    )
+
 
 
 # 발음 조회 - 임시 고정값
