@@ -3,7 +3,9 @@ from src.app.schemas.llm_dto import (
     GetWordPhoneticsRequest,
     GetWordPhoneticsResponse,
     CreateMnemonicExampleRequest,
-    CreateMnemonicExampleResponse
+    CreateMnemonicExampleResponse,
+    RegenerateMnemonicExampleRequest,
+    RegenerateMnemonicExampleResponse
 )
 from src.app.services.llm_service import (
     get_word_phonetics,
@@ -40,5 +42,19 @@ async def fetch_word_phonetics(request: GetWordPhoneticsRequest):
 async def fetch_mnemonic_example(request: CreateMnemonicExampleRequest):
     try:
         return await generate_mnemonic_example(request)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post(
+    "/regenerate-mnemonic",
+    response_model=RegenerateMnemonicExampleResponse,
+    tags=["LLM"],
+    status_code=status.HTTP_200_OK,
+    summary="연상 문장 기반 이미지 재생성",
+    description="단어, 뜻, 연상 문장을 기반으로 이미지를 새로 생성하여 이미지 URL을 반환"
+)
+async def regenerate_mnemonic(request: RegenerateMnemonicExampleRequest):
+    try:
+        return await regenerate_mnemonic_example(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
